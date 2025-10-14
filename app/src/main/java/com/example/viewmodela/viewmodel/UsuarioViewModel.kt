@@ -53,7 +53,7 @@ class UsuarioViewModel: ViewModel() {
             errores.clave,
             errores.direccion,
         ).isNotEmpty()
-
+12
         _estado.update { it.copy(errores = errores) }
 
         return !hayErrores
