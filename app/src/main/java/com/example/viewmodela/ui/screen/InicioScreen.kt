@@ -40,26 +40,49 @@ data class Product(
 )
 
 // --- Sample Data (Datos de ejemplo) ---
-// NOTA: Reemplaza con tus propias imágenes. Añádelas a res/drawable.
-//val carouselSlides = listOf(
-//    CarouselSlide(R.drawable.gamer_stock, "Level-up Gamer", "Tu lugar para todo lo relacionado con videojuegos"),
-//    CarouselSlide(R.drawable.componentes, "Arma tu PC como un Pro", "Encuentra componentes de última generación"),
-//    CarouselSlide(R.drawable.ps_logo_stock, "Conéctate al mundo Gamer", "Comunidad, merch y más")
-//)
-//
-//val bestSellers = listOf(
-//    Product("Polera Level Up", "$15.990", R.drawable.polera_level_up),
-//    Product("Tarjeta Gráfica RTX 4090", "$1.899.990", R.drawable.componentes),
-//    Product("PlayStation 5", "$549.990", R.drawable.ps_logo_stock)
-//    // Agrega más productos
-//)
+val carouselSlides = listOf(
+    CarouselSlide(R.drawable.gamer_stock, "Level-up Gamer", "Tu lugar para todo lo relacionado con videojuegos"),
+    CarouselSlide(R.drawable.componentes, "Arma tu PC como un Pro", "Encuentra componentes de última generación"),
+    CarouselSlide(R.drawable.ps_logo_stock, "Conéctate al mundo Gamer", "Comunidad, merch y más")
+)
+
+val bestSellers = listOf(
+    Product("Polera Level Up", "$15.990", R.drawable.polera_level_up),
+    Product("Tarjeta Gráfica RTX 4090", "$1.899.990", R.drawable.componentes),
+    Product("PlayStation 5", "$549.990", R.drawable.ps_logo_stock)
+)
+
+@Composable
+fun SafeImage(modifier: Modifier = Modifier, imageRes: Int, contentDescription: String) {
+    val context = LocalContext.current
+    val resourceExists = remember(imageRes) {
+        try {
+            context.resources.getResourceName(imageRes)
+            true
+        } catch (e: android.content.res.Resources.NotFoundException) {
+            false
+        }
+    }
+
+    if (resourceExists) {
+        Image(
+            painter = painterResource(id = imageRes),
+            contentDescription = contentDescription,
+            modifier = modifier,
+            contentScale = ContentScale.Crop
+        )
+    } else {
+        // Si la imagen no se encuentra, muestra un espacio en blanco
+        Spacer(modifier = modifier)
+    }
+}
+
 
 @Composable
 fun InicioScreen(navController: NavController) {
-    // Estado para simular el inicio de sesión. En una app real, esto vendría de un ViewModel.
     var isLoggedIn by remember { mutableStateOf(false) }
-    var isAdmin by remember { mutableStateOf(false) } // Simula si el usuario es admin
-    val username = "Frank" // Simula un nombre de usuario
+    var isAdmin by remember { mutableStateOf(false) }
+    val username = "Frank"
 
     Scaffold { paddingValues ->
         LazyColumn(
@@ -68,7 +91,7 @@ fun InicioScreen(navController: NavController) {
                 .padding(paddingValues)
         ) {
             item {
-                //CarouselSection(slides = carouselSlides)
+                CarouselSection(slides = carouselSlides)
             }
             item {
                 UserGreetingSection(
@@ -81,7 +104,7 @@ fun InicioScreen(navController: NavController) {
                 )
             }
             item {
-                //BestSellersSection(products = bestSellers, navController = navController)
+                BestSellersSection(products = bestSellers, navController = navController)
             }
             item {
                 TechSupportBanner(context = LocalContext.current)
@@ -105,11 +128,10 @@ fun CarouselSection(slides: List<CarouselSlide>) {
     ) { page ->
         val slide = slides[page]
         Box(contentAlignment = Alignment.BottomStart) {
-            Image(
-                painter = painterResource(id = slide.imageRes),
+            SafeImage(
+                imageRes = slide.imageRes,
                 contentDescription = slide.title,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
             )
             Column(
                 modifier = Modifier
@@ -197,7 +219,6 @@ fun UserGreetingSection(
                     }
                 }
             }
-            // Botón para simular cambio de rol
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text("Es Admin:")
                 Checkbox(checked = isAdmin, onCheckedChange = { onAdminToggle() })
@@ -233,13 +254,12 @@ fun ProductCard(product: Product, onClick: () -> Unit) {
         onClick = onClick
     ) {
         Column {
-            Image(
-                painter = painterResource(id = product.imageRes),
+            SafeImage(
+                imageRes = product.imageRes,
                 contentDescription = product.name,
                 modifier = Modifier
                     .height(120.dp)
                     .fillMaxWidth(),
-                contentScale = ContentScale.Crop
             )
             Column(modifier = Modifier.padding(8.dp)) {
                 Text(text = product.name, fontWeight = FontWeight.Bold, maxLines = 1)
