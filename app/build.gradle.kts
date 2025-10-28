@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -42,24 +43,43 @@ android {
 
 
 dependencies {
-    implementation("androidx.navigation:navigation-compose:2.7.7")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0-rc82")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    // --- LIBRERÍAS NUEVAS Y ESENCIALES PARA EL DISEÑO ---
+    // Foundation: Proporciona los bloques de construcción básicos de UI como LazyColumn, Row, Box, y el nuevo Pager.
+    implementation(libs.androidx.compose.foundation)
+    // Íconos de Material Design (Icons.Default.Build, etc.)
+    implementation(libs.androidx.compose.material.icons.extended)
+
+    // --- LIBRERÍAS QUE YA TENÍAS ---
+    // Navegación en Compose
+    implementation(libs.androidx.navigation.compose)
+
+    // ViewModel para Compose
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose) // Ya no suele ser necesaria si usas el BOM
+
+    // Coroutines de Kotlin para Android
+    implementation(libs.org.jetbrains.kotlinx.kotlinx.coroutines.android)
+
+    // Core KTX y Activity Compose
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom)) // Corrected line
+
+    // Compose Bill of Materials (BOM) - Gestiona las versiones de Compose
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("androidx.navigation:navigation-runtime-ktx:2.7.7")
+
+    // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom)) // Also correct this one
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // Debug
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+
