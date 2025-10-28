@@ -21,10 +21,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import com.example.viewmodela.R
+import com.example.viewmodela.viewmodel.UsuarioViewModel
+import androidx.compose.foundation.ExperimentalFoundationApi // Import nuevo
+import androidx.compose.foundation.pager.HorizontalPager     // Import nuevo
+import androidx.compose.foundation.pager.rememberPagerState   // Import nuevo
+
 
 // --- Data Classes (Modelos de datos) ---
 data class CarouselSlide(
@@ -40,17 +42,26 @@ data class Product(
 )
 
 // --- Sample Data (Datos de ejemplo) ---
-val carouselSlides = listOf(
+// --- Sample Data (Datos de ejemplo) ---
+// Comentamos los datos originales para probar
+val carouselSlides = emptyList<CarouselSlide>()
+/*
+listOf(
     CarouselSlide(R.drawable.gamer_stock, "Level-up Gamer", "Tu lugar para todo lo relacionado con videojuegos"),
     CarouselSlide(R.drawable.componentes, "Arma tu PC como un Pro", "Encuentra componentes de última generación"),
     CarouselSlide(R.drawable.ps_logo_stock, "Conéctate al mundo Gamer", "Comunidad, merch y más")
 )
+*/
 
-val bestSellers = listOf(
+val bestSellers = emptyList<Product>()
+/*
+listOf(
     Product("Polera Level Up", "$15.990", R.drawable.polera_level_up),
     Product("Tarjeta Gráfica RTX 4090", "$1.899.990", R.drawable.componentes),
     Product("PlayStation 5", "$549.990", R.drawable.ps_logo_stock)
 )
+*/
+
 
 @Composable
 fun SafeImage(modifier: Modifier = Modifier, imageRes: Int, contentDescription: String) {
@@ -79,7 +90,7 @@ fun SafeImage(modifier: Modifier = Modifier, imageRes: Int, contentDescription: 
 
 
 @Composable
-fun InicioScreen(navController: NavController) {
+fun InicioScreen(navController: NavController, usuarioViewModel: UsuarioViewModel) {
     var isLoggedIn by remember { mutableStateOf(false) }
     var isAdmin by remember { mutableStateOf(false) }
     val username = "Frank"
@@ -114,17 +125,18 @@ fun InicioScreen(navController: NavController) {
 }
 
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class) // <-- Cambio aquí
 @Composable
 fun CarouselSection(slides: List<CarouselSlide>) {
-    val pagerState = rememberPagerState()
+    // El nuevo rememberPagerState requiere el número de páginas inicial.
+    val pagerState = rememberPagerState(pageCount = { slides.size }) // <-- Cambio aquí
 
-    HorizontalPager(
-        count = slides.size,
+    HorizontalPager( // <-- El nuevo HorizontalPager
         state = pagerState,
         modifier = Modifier
             .fillMaxWidth()
-            .height(250.dp)
+            .height(250.dp),
+        key = { page -> slides[page].imageRes } // Añadir un key es una buena práctica
     ) { page ->
         val slide = slides[page]
         Box(contentAlignment = Alignment.BottomStart) {

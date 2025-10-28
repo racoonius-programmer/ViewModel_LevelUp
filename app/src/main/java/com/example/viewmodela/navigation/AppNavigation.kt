@@ -17,12 +17,14 @@ fun AppNavigation(){
     //Aquí creamos el ViewModel una vez
     val usuarioViewModel: UsuarioViewModel = viewModel()
 
+
     NavHost(
         navController = navController,
         startDestination = "inicio"
     ){
         composable("inicio"){
-            InicioScreen(navController)
+            // SOLUCIÓN: Pasa el viewModel a la pantalla de inicio.
+            InicioScreen(navController, usuarioViewModel)
         }
         composable("registro"){
             RegistroScreen(navController, usuarioViewModel)
