@@ -1,10 +1,11 @@
 package com.example.viewmodela.model
 
+import androidx.annotation.DrawableRes
+import androidx.compose.ui.graphics.vector.ImageVector
+
 // atributo de Producto
 data class Producto(
-val nombre: String = "",
-val precio: String = "",
-val descripcion: String = "",
-val categoria: String = "",
-val imagen: String = ""
+    val name: String,
+    val price: Int,
+    val icon: ImageVector
 )

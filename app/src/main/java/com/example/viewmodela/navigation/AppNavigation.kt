@@ -1,14 +1,23 @@
 package com.example.viewmodela.navigation
 
 import ResumenScreen
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.viewmodela.model.Producto
 import com.example.viewmodela.ui.screen.RegistroScreen
 import com.example.viewmodela.ui.screen.InicioScreen
 import com.example.viewmodela.viewmodel.UsuarioViewModel
+import com.example.viewmodela.R
+import com.example.viewmodela.ui.screen.AddProductScreen
+import com.example.viewmodela.ui.screen.CartScreen
+import com.example.viewmodela.ui.screen.ProductListScreen
 
 @Composable
 fun AppNavigation(){
@@ -31,6 +40,27 @@ fun AppNavigation(){
         }
         composable("resumen"){
             ResumenScreen(usuarioViewModel)
+        }
+        composable("productos") {
+            ProductListScreen(
+                onGoToCart = { navController.navigate("cart") },
+                onAddProduct = { navController.navigate("add") }
+            )
+        }
+
+        composable("add") {
+            AddProductScreen(
+                onBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("cart") {
+            val demoCart = listOf(
+                Producto("Polera Level Up", 15990, Icons.Default.Image),
+                Producto("Tarjeta Gráfica RTX 4090", 1899990, Icons.Default.Build),
+                Producto("PlayStation 5", 549990, Icons.Default.ShoppingCart)
+            )
+            CartScreen(cart = demoCart, onBack = { navController.popBackStack() })
         }
     }
 }

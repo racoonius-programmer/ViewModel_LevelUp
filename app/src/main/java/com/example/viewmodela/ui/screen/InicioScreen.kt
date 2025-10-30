@@ -40,12 +40,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.viewmodela.R
+import com.example.viewmodela.model.Producto
+import com.example.viewmodela.util.formatPrice
 import com.example.viewmodela.viewmodel.UsuarioViewModel
 
 // --- Modelos de datos ---
 // Modificamos los modelos para usar Íconos de Material en lugar de recursos drawable
 data class CarouselSlide(val icon: ImageVector, val title: String, val subtitle: String)
-data class Product(val name: String, val price: String, val icon: ImageVector)
 
 // --- Datos de Ejemplo con Íconos ---
 // Usamos íconos de Material Design que siempre están disponibles.
@@ -56,9 +57,9 @@ val carouselSlides = listOf(
 )
 
 val bestSellers = listOf(
-    Product("Polera Level Up", "$15.990", Icons.Default.Image),
-    Product("Tarjeta Gráfica RTX 4090", "$1.899.990", Icons.Default.Build),
-    Product("PlayStation 5", "$549.990", Icons.Default.ShoppingCart)
+    Producto("Polera Level Up", 15990, Icons.Default.Image),
+    Producto("Tarjeta Gráfica RTX 4090", 1899990, Icons.Default.Build),
+    Producto("PlayStation 5", 549990, Icons.Default.ShoppingCart)
 )
 
 
@@ -132,7 +133,7 @@ fun HeaderSection(
             }
             Spacer(Modifier.width(8.dp))
             Button(onClick = onLoginClick) {
-                Text("Login")
+                Text("Iniciar Sesión")
             }
         }
     }
@@ -145,7 +146,7 @@ fun CarouselSection(slides: List<CarouselSlide>) {
 
     Column {
         Text(
-            text = "Ofertas Destacadas",
+            text = "Sobre Nosotros",
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
@@ -234,7 +235,7 @@ fun CarouselCard(slide: CarouselSlide) {
 }
 
 @Composable
-fun BestSellersSection(products: List<Product>, navController: NavController) {
+fun BestSellersSection(products: List<Producto>, navController: NavController) {
     Column(modifier = Modifier.padding(top = 16.dp)) {
         Row(
             modifier = Modifier
@@ -243,12 +244,12 @@ fun BestSellersSection(products: List<Product>, navController: NavController) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Los Más Vendidos",
+                text = "Nuestros Productos Más Vendidos",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f)
             )
-            TextButton(onClick = { /* navController.navigate("productos") */ }) {
+            TextButton(onClick = { navController.navigate("productos")  }) {
                 Text("Ver todos")
                 Icon(Icons.Default.ArrowForward, contentDescription = null, modifier = Modifier.size(16.dp))
             }
@@ -266,7 +267,7 @@ fun BestSellersSection(products: List<Product>, navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductCard(product: Product, onClick: () -> Unit) {
+fun ProductCard(product: Producto, onClick: () -> Unit) {
     Card(
         modifier = Modifier.width(160.dp),
         onClick = onClick,
@@ -299,7 +300,7 @@ fun ProductCard(product: Product, onClick: () -> Unit) {
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    text = product.price,
+                    text = "$${product.price.formatPrice()}",
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.bodyMedium
