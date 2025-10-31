@@ -45,21 +45,37 @@ import com.example.viewmodela.util.formatPrice
 import com.example.viewmodela.viewmodel.UsuarioViewModel
 
 // --- Modelos de datos ---
-// Modificamos los modelos para usar Íconos de Material en lugar de recursos drawable
-data class CarouselSlide(val icon: ImageVector, val title: String, val subtitle: String)
+// Modificamos el modelo para que acepte un recurso de imagen o un ícono
+data class CarouselSlide(
+    val title: String,
+    val subtitle: String,
+    val imageRes: Int? = null,
+    val icon: ImageVector? = null
+)
 
-// --- Datos de Ejemplo con Íconos ---
-// Usamos íconos de Material Design que siempre están disponibles.
+// --- Datos de Ejemplo con Íconos e Imagen ---
 val carouselSlides = listOf(
-    CarouselSlide(Icons.Default.Image, "Level-up Gamer", "Tu lugar para todo lo relacionado con videojuegos"),
-    CarouselSlide(Icons.Default.Build, "Arma tu PC como un Pro", "Componentes de última generación"),
-    CarouselSlide(Icons.Default.ShoppingCart, "Conéctate al Mundo Gamer", "Comunidad, merch y más")
+    CarouselSlide(
+        title = "Level-up Gamer",
+        subtitle = "Tu lugar para todo lo relacionado con videojuegos",
+        imageRes = R.drawable.gamer_stock
+    ),
+    CarouselSlide(
+        title = "Arma tu PC como un Pro",
+        subtitle = "Componentes de última generación",
+        imageRes = R.drawable.componentes
+    ),
+    CarouselSlide(
+        title = "Conéctate al Mundo Gamer",
+        subtitle = "Comunidad, merch y más",
+        imageRes = R.drawable.evento
+    )
 )
 
 val bestSellers = listOf(
-    Producto("Polera Level Up", 15990, Icons.Default.Image),
-    Producto("Tarjeta Gráfica RTX 4090", 1899990, Icons.Default.Build),
-    Producto("PlayStation 5", 549990, Icons.Default.ShoppingCart)
+    Producto("Polera Level Up", 15990, imageRes = R.drawable.polera_level_up),
+    Producto("Pc Gamer", 1899990, imageRes = R.drawable.pc_gamer_asus_strix),
+    Producto("PlayStation 5", 549990, imageRes = R.drawable.playstation5)
 )
 
 
@@ -79,9 +95,9 @@ fun InicioScreen(navController: NavController, usuarioViewModel: UsuarioViewMode
             HeaderSection(
                 isLoggedIn = isLoggedIn,
                 username = username,
-                onLoginClick = { isLoggedIn = !isLoggedIn },
+                onLoginClick = { navController.navigate("login") },
                 onRegisterClick = { navController.navigate("registro") },
-                onCartClick = { /* navController.navigate("carrito") */ }
+                onCartClick = { navController.navigate("cart")}
             )
         }
         item { CarouselSection(slides = carouselSlides) }
@@ -190,18 +206,28 @@ fun CarouselCard(slide: CarouselSlide) {
         shape = RoundedCornerShape(16.dp),
     ) {
         Box(contentAlignment = Alignment.BottomStart) {
-            // Reemplazamos la imagen por un fondo de color y un ícono grande
-            Box(modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.secondaryContainer),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = slide.icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(80.dp),
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.5f)
+            if (slide.imageRes != null) {
+                Image(
+                    painter = painterResource(id = slide.imageRes),
+                    contentDescription = slide.title,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
+            } else {
+                Box(modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.secondaryContainer),
+                    contentAlignment = Alignment.Center
+                ) {
+                    slide.icon?.let {
+                        Icon(
+                            imageVector = it,
+                            contentDescription = null,
+                            modifier = Modifier.size(80.dp),
+                            tint = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.5f)
+                        )
+                    }
+                }
             }
             Box(
                 modifier = Modifier
@@ -275,20 +301,35 @@ fun ProductCard(product: Producto, onClick: () -> Unit) {
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
-            // Reemplazamos la imagen por un Box con color e ícono
             Box(
                 modifier = Modifier
                     .height(110.dp)
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = product.icon,
-                    contentDescription = null,
-                    modifier = Modifier.size(48.dp),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                if (product.imageRes != null) {
+                    Image(
+                        painter = painterResource(id = product.imageRes),
+                        contentDescription = product.name,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        product.icon?.let {
+                            Icon(
+                                imageVector = it,
+                                contentDescription = null,
+                                modifier = Modifier.size(48.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
             }
             Column(modifier = Modifier.padding(12.dp)) {
                 Text(
@@ -344,12 +385,10 @@ fun TechSupportBanner(context: Context) {
                     color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
                 )
             }
-            // Usamos un ícono de Material que ya existe, en lugar de uno de drawable
-            Icon(
-                imageVector = Icons.Default.HelpOutline,
-                contentDescription = null,
-                modifier = Modifier.size(40.dp),
-                tint = MaterialTheme.colorScheme.onSecondaryContainer
+            Image(
+                painter = painterResource(id = R.drawable.whatsapp_logo),
+                contentDescription = "Contactar por WhatsApp",
+                modifier = Modifier.size(40.dp)
             )
         }
     }

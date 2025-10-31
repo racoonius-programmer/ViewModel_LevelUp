@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -30,11 +31,14 @@ fun RegistroScreen(
     val estado by viewModel.estado.collectAsState()
 
     Column(
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ){
+        Text("Registro", style = MaterialTheme.typography.headlineMedium)
+        Spacer(Modifier.height(16.dp))
         //Campo nombre
         OutlinedTextField(
             value= estado.nombre,
@@ -48,6 +52,7 @@ fun RegistroScreen(
             },
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(Modifier.height(12.dp))
         //Campo Correo
         OutlinedTextField(
             value= estado.correo,
@@ -61,6 +66,7 @@ fun RegistroScreen(
             },
                     modifier = Modifier.fillMaxWidth()
         )
+        Spacer(Modifier.height(12.dp))
         //Campo Clave
         OutlinedTextField(
             value= estado.clave,
@@ -74,6 +80,7 @@ fun RegistroScreen(
             },
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(Modifier.height(12.dp))
         //Campo dirección
         OutlinedTextField(
             value= estado.direccion,
@@ -87,6 +94,7 @@ fun RegistroScreen(
             },
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(Modifier.height(12.dp))
         //Checkbox aceptar términos
         Row(verticalAlignment = Alignment.CenterVertically){
             Checkbox(
@@ -96,6 +104,7 @@ fun RegistroScreen(
             Spacer(Modifier.width(8.dp))
             Text("Acepto los términos y condiciones")
         }
+        Spacer(Modifier.height(24.dp))
         //Botón envíar
         Button(
             onClick = {

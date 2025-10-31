@@ -6,9 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 
 @Composable
-fun LoginScreen(onLogin: () -> Unit) {
+fun LoginScreen(navController: NavHostController, onLogin: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -16,7 +17,7 @@ fun LoginScreen(onLogin: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text("Pantalla de Login", style = MaterialTheme.typography.headlineMedium)
+        Text("Inicio de Sesión", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(16.dp))
         OutlinedTextField(value = "", onValueChange = {}, label = { Text("Usuario") })
         OutlinedTextField(value = "", onValueChange = {}, label = { Text("Contraseña") })
